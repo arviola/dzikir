@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Counter Fullscreen</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      background-color: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    #counter {
+      font-size: 10rem;
+      user-select: none;
+    }
+
+    #reset {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      font-size: 0.9rem;
+      padding: 5px 10px;
+      background-color: rgba(255, 0, 0, 0.8);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 999;
+    }
+
+    #reset:hover {
+      background-color: rgba(255, 0, 0, 1);
+    }
+  </style>
+</head>
+<body>
+  <div id="counter">0</div>
+  <button id="reset">Reset</button>
+
+  <script>
+    let count = 0;
+    const counterEl = document.getElementById('counter');
+    const resetBtn = document.getElementById('reset');
+    let hasEnteredFullscreen = false;
+    let lastVibratedAt = 0;
+
+    function updateCounter() {
+      counterEl.textContent = count;
+
+      // Getar setiap kelipatan 100
+      if (count > 0 && count % 100 === 0 && count !== lastVibratedAt) {
+        if (navigator.vibrate) {
+          navigator.vibrate([200, 100, 200]); // Getar dua kali
+        }
+        lastVibratedAt = count;
+      }
+    }
+
+    function resetCounter(event) {
+      event.stopPropagation(); // Jangan hitung klik pada tombol reset
+      count = 0;
+      lastVibratedAt = 0;
+      updateCounter();
+    }
+
+    function handleClick() {
+      if (!hasEnteredFullscreen) {
+        document.documentElement.requestFullscreen().catch(console.warn);
+        hasEnteredFullscreen = true;
+      }
+
+      count++;
+      updateCounter();
+    }
+
+    document.body.addEventListener('click', handleClick);
+    resetBtn.addEventListener('click', resetCounter);
+
+    updateCounter();
+  </script>
+</body>
+</html>
