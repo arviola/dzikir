@@ -58,4 +58,61 @@
       color: white;
       border: none;
       border-radius: 6px;
-      font-size: 16px
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #176a81;
+    }
+
+    #status {
+      margin-top: 15px;
+      text-align: center;
+      font-weight: bold;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Form Input</h2>
+    <form id="formku">
+      <label>Nama:</label><br>
+      <input type="text" name="nama" required><br>
+
+      <label>Nomor HP:</label><br>
+      <input type="text" name="nomor" required><br>
+
+      <label>Testimoni:</label><br>
+      <textarea name="testimoni" placeholder="Tulis pengalaman atau pendapat Anda..." required></textarea><br>
+
+      <button type="submit">Kirim</button>
+    </form>
+    <p id="status"></p>
+  </div>
+
+  <script>
+    document.getElementById("formku").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const form = new FormData(this);
+
+      fetch("https://script.google.com/macros/s/AKfycbyBnnCJAM8ycA-r6S5sKvymqMo_ZxcVyHv3GnaeOJx4g3LQFsg2UUo0ZSMEZ1UpWYe1wg/exec", {
+        method: "POST",
+        body: form
+      })
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("status").innerText = data;
+        document.getElementById("formku").reset();
+      })
+      .catch(error => {
+        document.getElementById("status").innerText = "Gagal mengirim data";
+      });
+    });
+  </script>
+</body>
+</html>
