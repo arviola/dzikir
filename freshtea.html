@@ -8,9 +8,64 @@
       background-repeat: no-repeat;   /* Jangan ulangi gambar */
       background-position: left top;    /* Posisikan di tengah */
     }
+
+    .form-container {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+    }
+
+    label {
+      position: absolute;
+      font-weight: bold;
+    }
+
+    input, textarea {
+      position: absolute;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    /* Koordinat */
+    #label-nama     { top: 50px;  left: 50px; }
+    #input-nama     { top: 70px;  left: 50px; width: 200px; }
+
+    #label-hp       { top: 120px; left: 50px; }
+    #input-hp       { top: 140px; left: 50px; width: 200px; }
+
+    #label-alamat   { top: 190px; left: 50px; }
+    #input-alamat   { top: 210px; left: 50px; width: 300px; height: 100px; }
+
+    #submit-button  {
+      top: 330px;
+      left: 50px;
+      position: absolute;
+      padding: 8px 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    #submit-button:hover {
+      background-color: #0056b3;
+    }
   </style>
 </head>
 <body>
-  <h1>Selamat Datang</h1>
+  <div class="form-container">
+    <label id="label-nama" for="nama">Nama:</label>
+    <input id="input-nama" type="text" name="nama" placeholder="Masukkan nama">
+
+    <label id="label-hp" for="hp">Nomor HP:</label>
+    <input id="input-hp" type="number" name="hp" placeholder="08123456789">
+
+    <label id="label-alamat" for="alamat">Alamat:</label>
+    <textarea id="input-alamat" name="alamat" placeholder="Masukkan alamat lengkap..."></textarea>
+
+    <button id="submit-button" type="submit">Kirim</button>
+  </div>
 </body>
 </html>
