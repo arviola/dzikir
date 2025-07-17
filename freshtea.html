@@ -1,116 +1,83 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Form Input ke Google Sheet</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Testimoni</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: linear-gradient(to right, #2193b0, #6dd5ed);
-      color: #333;
+      background: #f2f2f2;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      margin: 0;
-      padding: 10px;
     }
-
-    .container {
-      background-color: #ffffffcc;
-      padding: 30px 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    form {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
       width: 100%;
-      max-width: 360px;
+      max-width: 400px;
     }
-
-    h2 {
-      text-align: center;
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
       margin-bottom: 20px;
-      color: #0f3f5c;
-    }
-
-    label {
-      font-weight: bold;
-    }
-
-    input[type="text"],
-    textarea {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      margin-bottom: 15px;
       border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 16px;
+      border-radius: 4px;
     }
-
-    textarea {
-      resize: vertical;
-      min-height: 80px;
-    }
-
     button {
-      width: 100%;
-      padding: 12px;
-      background-color: #2193b0;
+      background-color: #4CAF50;
       color: white;
+      padding: 10px;
       border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      font-weight: bold;
+      border-radius: 4px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      width: 100%;
     }
-
     button:hover {
-      background-color: #176a81;
-    }
-
-    #status {
-      margin-top: 15px;
-      text-align: center;
-      font-weight: bold;
-      color: green;
+      background-color: #45a049;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Form Input</h2>
-    <form id="formku">
-      <label>Nama:</label><br>
-      <input type="text" name="nama" required><br>
-
-      <label>Nomor HP:</label><br>
-      <input type="text" name="nomor" required><br>
-
-      <label>Testimoni:</label><br>
-      <textarea name="testimoni" placeholder="Tulis pengalaman atau pendapat Anda..." required></textarea><br>
-
-      <button type="submit">Kirim</button>
-    </form>
-    <p id="status"></p>
-  </div>
+  <form id="form">
+    <h2>Form Testimoni</h2>
+    <input type="text" name="nama" placeholder="Nama" required />
+    <input type="tel" name="hp" placeholder="Nomor HP" required />
+    <textarea name="testimoni" placeholder="Tulis testimoni Anda..." rows="4" required></textarea>
+    <button type="submit">Kirim</button>
+    <p id="status" style="text-align:center;color:green;"></p>
+  </form>
 
   <script>
-    document.getElementById("formku").addEventListener("submit", function(e) {
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxvgqAqwAAt4fiBUN-7sEOLI2LdbJRgAxOfboYXNIyK-HYtne0yXdkfnw6E1m-5oT0Qqg/exec";
+
+    document.getElementById("form").addEventListener("submit", e => {
       e.preventDefault();
+      const form = e.target;
+      const data = {
+        nama: form.nama.value,
+        hp: form.hp.value,
+        testimoni: form.testimoni.value
+      };
 
-      const form = new FormData(this);
-
-      fetch("https://script.google.com/macros/s/AKfycbyBnnCJAM8ycA-r6S5sKvymqMo_ZxcVyHv3GnaeOJx4g3LQFsg2UUo0ZSMEZ1UpWYe1wg/exec", {
+      fetch(scriptURL, {
         method: "POST",
-        body: form
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json"
+        }
       })
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById("status").innerText = data;
-        document.getElementById("formku").reset();
+      .then(response => response.json())
+      .then(result => {
+        document.getElementById("status").innerText = "Berhasil terkirim!";
+        form.reset();
       })
       .catch(error => {
-        document.getElementById("status").innerText = "Gagal mengirim data";
+        document.getElementById("status").innerText = "Gagal mengirim!";
+        console.error("Error!", error.message);
       });
     });
   </script>
