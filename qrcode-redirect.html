@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Redirecting…</title>
+
+  <!--
+    GANTI Measurement ID di bawah ini dengan Measurement ID GA4-mu (format: G-XXXXXXXXXX)
+    Lalu upload file ini ke server/public URL yang dipakai untuk QR code.
+  -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    // === PENGATURAN ===
+    // Ganti target URL di bawah ini jika perlu
+    const TARGET_URL = "http://app-segar.ddns.net:83/";
+    // Delay sebelum redirect (ms) — beri waktu GA mengirim data (default 800ms)
+    const REDIRECT_DELAY_MS = 800;
+
+    // === GA4: inisialisasi gtag ===
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    // Ganti 'G-XXXXXXXXXX' dengan Measurement ID GA4 milikmu
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX', {
+      // optional: kirim page_path khusus agar mudah dilacak
+      'page_path': '/qr-redirect',
+      'send_page_view': true
+    });
+
+    // tambahan: kirim event custom agar mudah difilter di laporan
+    function trackAndRedirect() {
+      // Kirim event custom (label boleh diubah)
+      try {
+        gtag('event', 'qr_scan', {
+          'method': 'qr',
+          'destination': TARGET_URL
+        });
+      } catch (e) {
+        // ignore
+      }
+
+      // Pastikan redirect tetap terjadi walau GA gagal
+      setTimeout(function(){
+        // Jika ingin menambahkan UTM params, uncomment baris di bawah ini:
+        // const url = new URL(TARGET_URL);
+        // url.searchParams.set('utm_source', 'qr');
+        // url.searchParams.set('utm_medium', 'print');
+        // url.searchParams.set('utm_campaign', 'qr_campaign');
+        // window.location.replace(url.toString());
+
+        window.location.replace(TARGET_URL);
+      }, REDIRECT_DELAY_MS);
+    }
+
+    // dipanggil saat DOM siap
+    document.addEventListener('DOMContentLoaded', function(){
+      // Pastikan setTimeout fallback jika script GA lambat
+      // Jika GA belum sempat memuat dalam 3 detik, tetap redirect.
+      const fallback = setTimeout(function(){
+        window.location.replace(TARGET_URL);
+      }, 3000);
+
+      // Panggil fungsi tracking + redirect
+      trackAndRedirect();
+
+      // Setelah redirect dipicu, batalkan fallback
+      setTimeout(function(){ clearTimeout(fallback); }, 3100);
+    });
+  </script>
+
+  <!-- Meta refresh fallback (untuk browser yang disable JS, tetap redirect setelah 2s) -->
+  <noscript>
+    <meta http-equiv="refresh" content="2;url=http://app-segar.ddns.net:83/" />
+  </noscript>
+
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; display:flex; align-items:center; justify-content:center; height:100vh; margin:0; background:#0f1724; color:#e6eef8; }
+    .box { text-align:center; max-width:420px; padding:28px; border-radius:12px; background:rgba(255,255,255,0.03); box-shadow: 0 6px 24px rgba(2,6,23,0.6); }
+    .title { font-size:18px; margin-bottom:8px; }
+    .sub { font-size:13px; opacity:0.8; margin-bottom:18px; }
+    .link { color:#66d9ff; word-break:break-all; font-size:13px; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="title">Sedang mengarahkan...</div>
+    <div class="sub">Jika tidak diarahkan otomatis, klik tautan di bawah.</div>
+    <a class="link" href="http://app-segar.ddns.net:83/">http://app-segar.ddns.net:83/</a>
+  </div>
+</body>
+</html>
